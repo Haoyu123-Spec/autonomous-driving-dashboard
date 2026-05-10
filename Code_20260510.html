@@ -1,0 +1,711 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI大模型驱动的智能汽车自动驾驶决策优化与车路协同交互系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+            background-color: #FFFFFF;
+        }
+        .card {
+            background-color: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 1.25rem; /* 20px */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            overflow: hidden;
+            position: relative;
+        }
+        .card:hover {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+        .highlight-gradient-blue {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0), rgba(59, 130, 246, 0.05));
+        }
+        .highlight-gradient-green {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0), rgba(16, 185, 129, 0.05));
+        }
+        .highlight-gradient-purple {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0), rgba(139, 92, 246, 0.05));
+        }
+        .highlight-gradient-orange {
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0), rgba(249, 115, 22, 0.05));
+        }
+        .highlight-gradient-red {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0), rgba(239, 68, 68, 0.05));
+        }
+        .highlight-gradient-cyan {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0), rgba(6, 182, 212, 0.05));
+        }
+        .grid-pattern {
+            background-image: radial-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+    </style>
+</head>
+<body class="bg-white">
+    <div class="max-w-7xl mx-auto p-4 md:p-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6">
+            <!-- 主标题卡片 -->
+            <div class="card md:col-span-4 p-8 flex flex-col justify-center items-center text-center relative">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-blue"></div>
+                <div class="absolute top-0 right-0 w-1/2 h-1/2 grid-pattern opacity-50"></div>
+                <div class="relative z-10">
+                    <div class="inline-flex items-center px-4 py-1.5 rounded-full bg-blue-50 text-blue-600 text-sm font-medium mb-4">
+                        <i class="fa-solid fa-car-on mr-2"></i>
+                        <span>AI-Powered Autonomous Driving</span>
+                    </div>
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 mb-4">
+                        基于AI大模型的智能汽车<br>自动驾驶决策优化与车路协同交互系统
+                    </h1>
+                    <p class="text-xl text-gray-500 max-w-4xl mx-auto">
+                        端到端大模型驱动的下一代自动驾驶技术，融合车路协同，实现更安全、更高效的智能出行
+                    </p>
+                </div>
+            </div>
+
+            <!-- 技术趋势卡片 -->
+            <div class="card md:col-span-2 p-8 flex flex-col justify-between relative">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-green"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center mr-4">
+                            <i class="fa-solid fa-arrow-trend-up text-green-600 text-xl"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800">技术发展趋势</h2>
+                    </div>
+                    <p class="text-gray-600 mb-6">
+                        2025年，自动驾驶正从"辅助驾驶"向"条件自动驾驶"跨越，端到端大模型架构成为主流，VLA模型实现多模态融合与思维链推理。
+                    </p>
+                    <div class="flex space-x-4">
+                        <div class="flex-1 bg-gray-50 rounded-lg p-4">
+                            <div class="text-3xl font-bold text-green-600">L3+</div>
+                            <div class="text-sm text-gray-500">级自动驾驶</div>
+                        </div>
+                        <div class="flex-1 bg-gray-50 rounded-lg p-4">
+                            <div class="text-3xl font-bold text-green-600">VLA</div>
+                            <div class="text-sm text-gray-500">视觉-语言-行动</div>
+                        </div>
+                        <div class="flex-1 bg-gray-50 rounded-lg p-4">
+                            <div class="text-3xl font-bold text-green-600">V2X</div>
+                            <div class="text-sm text-gray-500">车路协同通信</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 挑战卡片 -->
+            <div class="card md:col-span-2 p-8 flex flex-col justify-between relative">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-red"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center mr-4">
+                            <i class="fa-solid fa-triangle-exclamation text-red-600 text-xl"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800">面临的挑战</h2>
+                    </div>
+                    <ul class="space-y-3 text-gray-600">
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-circle-minus text-red-500 mt-1 mr-3"></i>
+                            <span>感知极限与多维视角缺失</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-circle-minus text-red-500 mt-1 mr-3"></i>
+                            <span>训练场景不足与长尾问题</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-circle-minus text-red-500 mt-1 mr-3"></i>
+                            <span>逻辑决策瓶颈与接管机制</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-circle-minus text-red-500 mt-1 mr-3"></i>
+                            <span>算法"黑箱"问题与可解释性</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 技术架构卡片 -->
+            <div class="card md:col-span-4 p-8 flex flex-col relative">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-purple"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center mb-6">
+                        <div class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center mr-4">
+                            <i class="fa-solid fa-sitemap text-purple-600 text-xl"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800">整体技术架构</h2>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                        <!-- 感知层 -->
+                        <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+                            <div class="text-center mb-4">
+                                <div class="w-12 h-12 mx-auto rounded-full bg-purple-100 flex items-center justify-center mb-2">
+                                    <i class="fa-solid fa-eye text-purple-600 text-xl"></i>
+                                </div>
+                                <h3 class="font-bold text-lg text-gray-800">感知层</h3>
+                                <p class="text-sm text-gray-500">多模态环境感知</p>
+                            </div>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• BEV Transformer</li>
+                                <li>• 3D占用网络</li>
+                                <li>• 多传感器融合</li>
+                            </ul>
+                        </div>
+                        <!-- 预测层 -->
+                        <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+                            <div class="text-center mb-4">
+                                <div class="w-12 h-12 mx-auto rounded-full bg-purple-100 flex items-center justify-center mb-2">
+                                    <i class="fa-solid fa-chart-line text-purple-600 text-xl"></i>
+                                </div>
+                                <h3 class="font-bold text-lg text-gray-800">预测层</h3>
+                                <p class="text-sm text-gray-500">行为预测</p>
+                            </div>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• SEPT模型</li>
+                                <li>• 时空分离</li>
+                                <li>• 3-5秒预测</li>
+                            </ul>
+                        </div>
+                        <!-- 决策层 -->
+                        <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+                            <div class="text-center mb-4">
+                                <div class="w-12 h-12 mx-auto rounded-full bg-purple-100 flex items-center justify-center mb-2">
+                                    <i class="fa-solid fa-brain text-purple-600 text-xl"></i>
+                                </div>
+                                <h3 class="font-bold text-lg text-gray-800">决策层</h3>
+                                <p class="text-sm text-gray-500">驾驶策略决策</p>
+                            </div>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• VLA大模型</li>
+                                <li>• 强化学习</li>
+                                <li>• 意图理解</li>
+                            </ul>
+                        </div>
+                        <!-- 控制层 -->
+                        <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+                            <div class="text-center mb-4">
+                                <div class="w-12 h-12 mx-auto rounded-full bg-purple-100 flex items-center justify-center mb-2">
+                                    <i class="fa-solid fa-cogs text-purple-600 text-xl"></i>
+                                </div>
+                                <h3 class="font-bold text-lg text-gray-800">控制层</h3>
+                                <p class="text-sm text-gray-500">车辆运动控制</p>
+                            </div>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• LipsNet</li>
+                                <li>• 神经网络</li>
+                                <li>• 动作平滑</li>
+                            </ul>
+                        </div>
+                        <!-- 车路协同层 -->
+                        <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+                            <div class="text-center mb-4">
+                                <div class="w-12 h-12 mx-auto rounded-full bg-purple-100 flex items-center justify-center mb-2">
+                                    <i class="fa-solid fa-tower-broadcast text-purple-600 text-xl"></i>
+                                </div>
+                                <h3 class="font-bold text-lg text-gray-800">车路协同层</h3>
+                                <p class="text-sm text-gray-500">V2X通信交互</p>
+                            </div>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• C-V2X</li>
+                                <li>• 边缘计算</li>
+                                <li>• 毫秒级通信</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 创新点1: 多模态感知 -->
+            <div class="card md:col-span-2 p-8 flex flex-col justify-between relative">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-cyan"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-cyan-100 flex items-center justify-center mr-4">
+                            <i class="fa-solid fa-cubes text-cyan-600 text-xl"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800">创新点一：多模态感知融合</h2>
+                    </div>
+                    <ul class="space-y-3 text-gray-600">
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-circle-check text-cyan-500 mt-1 mr-3"></i>
+                            <span><strong>3D占用网络</strong>：以体素为单元对三维空间建模，规避长尾类别失效问题</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-circle-check text-cyan-500 mt-1 mr-3"></i>
+                            <span><strong>TPVFormer架构</strong>：三正交平面融合，覆盖更完整的3D场景</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-circle-check text-cyan-500 mt-1 mr-3"></i>
+                            <span><strong>FMCW激光雷达</strong>：直接测量目标速度矢量，提升动态追踪精度</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 创新点2: VLA大模型 -->
+            <div class="card md:col-span-2 p-8 flex flex-col justify-between relative">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-orange"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center mr-4">
+                            <i class="fa-solid fa-microchip text-orange-600 text-xl"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800">创新点二：VLA端到端决策</h2>
+                    </div>
+                    <p class="text-gray-600 mb-4">
+                        视觉-语言-行动（VLA）模型通过统一的多模态表示，将3D环境感知、自车状态和语言指令结合，直接生成驾驶动作。
+                    </p>
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <div class="text-lg font-bold text-gray-800 mb-2">核心优势</div>
+                        <ul class="text-gray-600 space-y-1">
+                            <li>• 思维链推理，整合感知、认知与行动</li>
+                            <li>• 决策可解释性，用自然语言解释决策过程</li>
+                            <li>• 强大的长尾场景泛化能力</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 创新点3: 车路云协同 -->
+            <div class="card md:col-span-2 p-8 flex flex-col justify-between relative">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-blue"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-4">
+                            <i class="fa-solid fa-cloud text-blue-600 text-xl"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800">创新点三：车路云一体化协同</h2>
+                    </div>
+                    <p class="text-gray-600 mb-4">
+                        构建"车-路-云"一体化协作系统，实现交通要素厘米级定位及行为预测。
+                    </p>
+                    <div class="flex space-x-4">
+                        <div class="flex-1 bg-white rounded-lg p-4 border border-gray-200">
+                            <div class="text-lg font-bold text-blue-600 mb-1">C-V2X通信</div>
+                            <div class="text-sm text-gray-500">PC5直连 & Uu蜂窝网络</div>
+                            <div class="text-2xl font-bold text-gray-800 mt-2">< 20ms</div>
+                            <div class="text-xs text-gray-400">通信延迟</div>
+                        </div>
+                        <div class="flex-1 bg-white rounded-lg p-4 border border-gray-200">
+                            <div class="text-lg font-bold text-blue-600 mb-1">边缘计算</div>
+                            <div class="text-sm text-gray-500">路侧AI轻量化算力</div>
+                            <div class="text-2xl font-bold text-gray-800 mt-2">20+</div>
+                            <div class="text-xs text-gray-400">交通参与者分类</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 创新点4: 大规模仿真 -->
+            <div class="card md:col-span-2 p-8 flex flex-col justify-between relative">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-green"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center mr-4">
+                            <i class="fa-solid fa-flask-vial text-green-600 text-xl"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800">创新点四：大规模仿真数据生成</h2>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div class="bg-white rounded-lg p-4 border border-gray-200">
+                            <div class="text-lg font-bold text-green-600">GPUDrive</div>
+                            <div class="text-sm text-gray-500">GPU加速模拟器</div>
+                        </div>
+                        <div class="bg-white rounded-lg p-4 border border-gray-200">
+                            <div class="text-lg font-bold text-green-600">3D Gaussian Splatting</div>
+                            <div class="text-sm text-gray-500">渲染引擎</div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <div class="text-3xl font-bold text-gray-800 mb-1">100万+</div>
+                        <div class="text-sm text-gray-500 mb-2">仿真步骤/秒</div>
+                        <div class="text-sm text-gray-600">单张A100 GPU日产能 ≈ 500台量产车路测数据</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 硬件配置方案 -->
+            <div class="card md:col-span-4 p-8 flex flex-col relative">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-purple"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center mb-6">
+                        <div class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center mr-4">
+                            <i class="fa-solid fa-microchip text-purple-600 text-xl"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800">硬件平台选型与配置</h2>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-gray-200">
+                                    <th class="pb-3 text-gray-800 font-bold">方案类型</th>
+                                    <th class="pb-3 text-gray-800 font-bold">核心硬件</th>
+                                    <th class="pb-3 text-gray-800 font-bold">价格范围</th>
+                                    <th class="pb-3 text-gray-800 font-bold">适用场景</th>
+                                    <th class="pb-3 text-gray-800 font-bold">性能特点</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-gray-200">
+                                    <td class="py-4">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center mr-3">
+                                                <i class="fa-solid fa-car text-purple-600"></i>
+                                            </div>
+                                            <span class="font-medium">入门级方案</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-4">树莓派4B/5 (4GB~8GB)</td>
+                                    <td class="py-4">¥300~500</td>
+                                    <td class="py-4">基础算法验证</td>
+                                    <td class="py-4">四核Cortex-A72处理器，主频1.5GHz</td>
+                                </tr>
+                                <tr class="border-b border-gray-200">
+                                    <td class="py-4">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center mr-3">
+                                                <i class="fa-solid fa-robot text-purple-600"></i>
+                                            </div>
+                                            <span class="font-medium">AI视觉方案</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-4">NVIDIA Jetson Nano/Orin NX</td>
+                                    <td class="py-4">Nano ¥400~600<br>Orin NX ¥2000+</td>
+                                    <td class="py-4">深度学习推理</td>
+                                    <td class="py-4">支持CUDA加速，适合AI模型部署</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-4">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center mr-3">
+                                                <i class="fa-solid fa-server text-purple-600"></i>
+                                            </div>
+                                            <span class="font-medium">高性能方案</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-4">Intel NUC迷你主机</td>
+                                    <td class="py-4">¥1500+</td>
+                                    <td class="py-4">复杂算法开发</td>
+                                    <td class="py-4">可扩展GPU，支持大规模模型训练</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Token消耗架构 -->
+            <div class="card md:col-span-2 p-8 flex flex-col justify-between relative">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-orange"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center mr-4">
+                            <i class="fa-solid fa-coins text-orange-600 text-xl"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800">Token消耗架构</h2>
+                    </div>
+                    <p class="text-gray-600 mb-4">
+                        多层次、大规模的AI模型架构，满足"消耗大量token"的技术需求。
+                    </p>
+                    <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                        <div class="text-lg font-bold text-gray-800 mb-2">核心模型参数</div>
+                        <div class="text-4xl font-bold text-orange-600 mb-1">81B</div>
+                        <div class="text-sm text-gray-500">总参数量</div>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <div class="text-lg font-bold text-gray-800 mb-2">计算需求</div>
+                        <div class="text-3xl font-bold text-gray-800 mb-1">152B FLOPs/Token</div>
+                        <div class="text-sm text-gray-500">VLA决策模型占144B FLOPs/Token</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 云计算资源配置 -->
+            <div class="card md:col-span-2 p-8 flex flex-col justify-between relative">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-cyan"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-cyan-100 flex items-center justify-center mr-4">
+                            <i class="fa-solid fa-cloud-arrow-up text-cyan-600 text-xl"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800">云计算资源配置</h2>
+                    </div>
+                    <div class="bg-white rounded-lg p-4 border border-gray-200 mb-4">
+                        <div class="text-lg font-bold text-cyan-600 mb-2">训练配置</div>
+                        <ul class="text-gray-600 space-y-1">
+                            <li>• 1000张H100 GPU</li>
+                            <li>• 训练周期：30天</li>
+                            <li>• 算力成本：约108万美元</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white rounded-lg p-4 border border-gray-200">
+                        <div class="text-lg font-bold text-cyan-600 mb-2">月度成本</div>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div class="text-sm text-gray-500">8卡A100配置</div>
+                                <div class="text-3xl font-bold text-gray-800">$15,000</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-sm text-gray-500">约合人民币</div>
+                                <div class="text-3xl font-bold text-gray-800">10万</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 预期成果图表 -->
+            <div class="card md:col-span-2 p-8 flex flex-col relative">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-green"></div>
+                <div class="relative z-10 flex flex-col h-full">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center mr-4">
+                            <i class="fa-solid fa-chart-bar text-green-600 text-xl"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800">预期性能指标</h2>
+                    </div>
+                    <div class="flex-grow relative h-64">
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 应用价值 -->
+            <div class="card md:col-span-2 p-8 flex flex-col justify-between relative">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-blue"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-4">
+                            <i class="fa-solid fa-lightbulb text-blue-600 text-xl"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800">应用价值</h2>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-white rounded-lg p-4 border border-gray-200">
+                            <div class="text-lg font-bold text-blue-600 mb-2">交通安全</div>
+                            <div class="text-3xl font-bold text-gray-800 mb-1">30%+</div>
+                            <div class="text-sm text-gray-500">事故率降低</div>
+                        </div>
+                        <div class="bg-white rounded-lg p-4 border border-gray-200">
+                            <div class="text-lg font-bold text-blue-600 mb-2">交通效率</div>
+                            <div class="text-3xl font-bold text-gray-800 mb-1">20%+</div>
+                            <div class="text-sm text-gray-500">通行效率提升</div>
+                        </div>
+                        <div class="bg-white rounded-lg p-4 border border-gray-200">
+                            <div class="text-lg font-bold text-blue-600 mb-2">能源消耗</div>
+                            <div class="text-3xl font-bold text-gray-800 mb-1">10-15%</div>
+                            <div class="text-sm text-gray-500">能耗降低</div>
+                        </div>
+                        <div class="bg-white rounded-lg p-4 border border-gray-200">
+                            <div class="text-lg font-bold text-blue-600 mb-2">单车价值</div>
+                            <div class="text-3xl font-bold text-gray-800 mb-1">7K-14K</div>
+                            <div class="text-sm text-gray-500">2030年单车软件价值(元)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 实施计划 -->
+            <div class="card md:col-span-4 p-8 flex flex-col relative">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-purple"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center mb-6">
+                        <div class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center mr-4">
+                            <i class="fa-solid fa-calendar-check text-purple-600 text-xl"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800">项目实施计划与里程碑</h2>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <!-- 第一阶段 -->
+                        <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-sm relative">
+                            <div class="absolute -top-3 -left-3 w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center border-4 border-white">
+                                <span class="font-bold text-purple-600">1</span>
+                            </div>
+                            <div class="pt-4">
+                                <div class="text-lg font-bold text-gray-800 mb-1">第一阶段</div>
+                                <div class="text-sm text-purple-600 mb-3">3个月</div>
+                                <div class="text-sm text-gray-600 mb-4">需求分析、方案设计、硬件采购</div>
+                                <div class="bg-gray-50 rounded-lg p-2">
+                                    <div class="text-xs font-medium text-gray-500">预期成果</div>
+                                    <div class="text-xs text-gray-600">完成系统设计文档、硬件平台搭建</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 第二阶段 -->
+                        <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-sm relative">
+                            <div class="absolute -top-3 -left-3 w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center border-4 border-white">
+                                <span class="font-bold text-purple-600">2</span>
+                            </div>
+                            <div class="pt-4">
+                                <div class="text-lg font-bold text-gray-800 mb-1">第二阶段</div>
+                                <div class="text-sm text-purple-600 mb-3">6个月</div>
+                                <div class="text-sm text-gray-600 mb-4">算法开发、模型训练、仿真测试</div>
+                                <div class="bg-gray-50 rounded-lg p-2">
+                                    <div class="text-xs font-medium text-gray-500">预期成果</div>
+                                    <div class="text-xs text-gray-600">完成核心算法开发、初步性能验证</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 第三阶段 -->
+                        <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-sm relative">
+                            <div class="absolute -top-3 -left-3 w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center border-4 border-white">
+                                <span class="font-bold text-purple-600">3</span>
+                            </div>
+                            <div class="pt-4">
+                                <div class="text-lg font-bold text-gray-800 mb-1">第三阶段</div>
+                                <div class="text-sm text-purple-600 mb-3">6个月</div>
+                                <div class="text-sm text-gray-600 mb-4">系统集成、实车测试、优化改进</div>
+                                <div class="bg-gray-50 rounded-lg p-2">
+                                    <div class="text-xs font-medium text-gray-500">预期成果</div>
+                                    <div class="text-xs text-gray-600">完成车路协同系统集成、路测验证</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 第四阶段 -->
+                        <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-sm relative">
+                            <div class="absolute -top-3 -left-3 w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center border-4 border-white">
+                                <span class="font-bold text-purple-600">4</span>
+                            </div>
+                            <div class="pt-4">
+                                <div class="text-lg font-bold text-gray-800 mb-1">第四阶段</div>
+                                <div class="text-sm text-purple-600 mb-3">3个月</div>
+                                <div class="text-sm text-gray-600 mb-4">成果总结、论文发表、专利申请</div>
+                                <div class="bg-gray-50 rounded-lg p-2">
+                                    <div class="text-xs font-medium text-gray-500">预期成果</div>
+                                    <div class="text-xs text-gray-600">完成项目总结、学术成果发表</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 可行性评估 -->
+            <div class="card md:col-span-2 p-8 flex flex-col justify-between relative">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-green"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center mr-4">
+                            <i class="fa-solid fa-check-circle text-green-600 text-xl"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800">可行性评估</h2>
+                    </div>
+                    <p class="text-gray-600 mb-4">
+                        基于当前大学生的技术能力和可用资源，本项目具有较高的技术可行性。
+                    </p>
+                    <ul class="space-y-3 text-gray-600">
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-circle-check text-green-500 mt-1 mr-3"></i>
+                            <span>2025年全国新增47所"智能车辆工程"本科专业</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-circle-check text-green-500 mt-1 mr-3"></i>
+                            <span>丰富的开源工具链支持：CARLA、Apollo、PyTorch</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-circle-check text-green-500 mt-1 mr-3"></i>
+                            <span>低成本硬件方案：树莓派4B仅需300-500元</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-circle-check text-green-500 mt-1 mr-3"></i>
+                            <span>竞赛获奖证明大学生具备复杂系统开发能力</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 项目总结 -->
+            <div class="card md:col-span-2 p-8 flex flex-col justify-between relative">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-blue"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-4">
+                            <i class="fa-solid fa-flag-checkered text-blue-600 text-xl"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800">项目总结</h2>
+                    </div>
+                    <p class="text-gray-600 mb-4">
+                        本项目作为一个基于AI大模型的智能汽车自动驾驶决策优化与车路协同交互系统，具有广阔的发展前景。
+                    </p>
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <div class="text-lg font-bold text-gray-800 mb-2">核心价值</div>
+                        <ul class="text-gray-600 space-y-1">
+                            <li>• 技术创新：VLA大模型驱动的端到端架构</li>
+                            <li>• 产业价值：推动智能汽车产业发展</li>
+                            <li>• 人才培养：培养下一代自动驾驶专业人才</li>
+                            <li>• 社会意义：提升交通安全，改善出行效率</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    // 性能指标图表
+    const ctx = document.getElementById('performanceChart').getContext('2d');
+    const performanceChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['感知精度(NDS)', '决策准确率', '响应时间(ms)', '长尾场景覆盖'],
+            datasets: [{
+                label: '当前技术',
+                data: [50, 85, 150, 70],
+                backgroundColor: 'rgba(167, 139, 250, 0.4)',
+                borderColor: 'rgba(167, 139, 250, 1)',
+                borderWidth: 1
+            }, {
+                label: '本项目目标',
+                data: [65, 95, 100, 90],
+                backgroundColor: 'rgba(16, 185, 129, 0.4)',
+                borderColor: 'rgba(16, 185, 129, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                                if(context.label.includes('响应时间')) {
+                                    label += context.parsed.y + ' ms';
+                                } else {
+                                    label += context.parsed.y + '%';
+                                }
+                            }
+                            return label;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return value + '%';
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+</html>
