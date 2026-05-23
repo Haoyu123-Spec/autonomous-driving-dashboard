@@ -28,6 +28,7 @@ class DuelingDQNAgent:
 
         self.use_noisy = cfg.use_noisy
         self.use_per = cfg.use_per
+        self.update_count = 0  # 用于硬更新计数
 
         # ε-greedy 仅在不用 NoisyNet 时生效
         self.epsilon = cfg.epsilon if not cfg.use_noisy else 0.0
@@ -90,17 +91,23 @@ class DuelingDQNAgent:
         q = self.online(s).gather(1, a.unsqueeze(1)).squeeze()
         td_errors = (y - q).detach().abs().cpu().numpy()
 
-        loss = (weights * nn.MSELoss(reduction='none')(q, y)).mean()
+        loss = (weights * nn.SmoothL1Loss(reduction='none')(q, y)).mean()
 
         self.optimizer.zero_grad()
         loss.backward()
-        torch.nn.utils.clip_grad_norm_(self.online.parameters(), 10.0)
+        torch.nn.utils.clip_grad_norm_(self.online.parameters(), cfg.grad_clip)
         self.optimizer.step()
 
-        # 软更新
-        with torch.no_grad():
-            for tp, op in zip(self.target.parameters(), self.online.parameters()):
-                tp.data.copy_(cfg.tau * op.data + (1 - cfg.tau) * tp.data)
+        self.update_count += 1
+        # 硬更新：每 N 步完全同步 target 网络（更稳定）
+        if cfg.target_update_freq > 0:
+            if self.update_count % cfg.target_update_freq == 0:
+                self.target.load_state_dict(self.online.state_dict())
+        else:
+            # 软更新（Polyak averaging）
+            with torch.no_grad():
+                for tp, op in zip(self.target.parameters(), self.online.parameters()):
+                    tp.data.copy_(cfg.tau * op.data + (1 - cfg.tau) * tp.data)
 
         # 更新 PER 优先级
         if self.use_per and indices is not None:

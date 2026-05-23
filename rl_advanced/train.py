@@ -5,7 +5,7 @@ import numpy as np
 import torch
 
 from config import Config
-from env import MultiAGVEnv
+from env import MultiAGVEnv, compute_max_state_dim
 from agent import DuelingDQNAgent
 
 
@@ -99,16 +99,11 @@ def train(cfg=None, headless=True):
     metrics = MetricsTracker()
     best_avg = -float("inf")
 
-    # 用初始配置建环境以获取 state_dim
-    apply_curriculum(cfg, 1)
-    env = MultiAGVEnv(cfg)
-    state_dim = env._get_obs_dim()
+    # 用全局最大 obs_dim 统一网络输入维度
+    state_dim = compute_max_state_dim(cfg)
     action_dim = 5
     agent = DuelingDQNAgent(state_dim, action_dim, cfg)
-
-    # 首次 reset 后可能 state_dim 变了（课程前期参数不同）
-    # 训练中如果课程切换导致 state_dim 变化，重新创建 agent
-    current_state_dim = state_dim
+    print(f"Fixed state_dim: {state_dim}")
 
     global_ep = 0
     for stage_idx, stage in enumerate(cfg.curriculum_stages if cfg.curriculum else []):
@@ -124,24 +119,7 @@ def train(cfg=None, headless=True):
 
         for ep_in_stage in range(1, stage_eps + 1):
             global_ep += 1
-            env = MultiAGVEnv(cfg)
-            new_dim = env._get_obs_dim()
-
-            # state_dim 变化时重建 agent（保留 buffer 和模型权重）
-            if new_dim != current_state_dim:
-                print(f"  -> state_dim 变化: {current_state_dim} -> {new_dim}，重建网络")
-                old_online = agent.online
-                old_target = agent.target
-                old_buffer = agent.buffer
-                old_opt = agent.optimizer
-
-                agent = DuelingDQNAgent(new_dim, action_dim, cfg)
-                # 尝试迁移可复用的特征层权重（前几层维度不变的部分跳过）
-                agent.buffer = old_buffer  # 但 buffer 存的是旧维度...直接清空
-                if agent.use_per:
-                    from network import PrioritizedReplayBuffer
-                    agent.buffer = PrioritizedReplayBuffer(cfg.buffer_capacity, cfg.per_alpha)
-                current_state_dim = new_dim
+            env = MultiAGVEnv(cfg, fixed_state_dim=state_dim)
 
             states = env.reset()
             ep_rewards = np.zeros(cfg.n_agvs)
@@ -206,7 +184,7 @@ def train(cfg=None, headless=True):
                 best_avg = running_avg
                 torch.save({
                     "model_state": agent.online.state_dict(),
-                    "state_dim": current_state_dim,
+                    "state_dim": state_dim,
                     "action_dim": action_dim,
                     "config": {k: v for k, v in cfg.__dict__.items()
                                if not k.startswith("_") and not callable(v)},

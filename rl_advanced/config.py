@@ -51,6 +51,8 @@ class Config:
     epsilon: float = 1.0
     eps_min: float = 0.02
     eps_decay: float = 0.998
+    target_update_freq: int = 100  # 每隔多少步硬更新 target（0=软更新）
+    grad_clip: float = 10.0
     device: str = "cuda"
     render_interval: int = 200
     print_interval: int = 50

@@ -17,7 +17,17 @@
       "Bash(powershell -Command \"Start-Sleep -Seconds 15; Get-Content 'C:\\\\Users\\\\33940\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\e--carAI\\\\80a6be88-f659-4be5-a620-585b87eaf361\\\\tasks\\\\buwohgrhu.output' -Tail 30\")",
       "Bash(Get-Content 'C:\\\\Users\\\\33940\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\e--carAI\\\\80a6be88-f659-4be5-a620-585b87eaf361\\\\tasks\\\\buwohgrhu.output')",
       "Bash(tasklist /FI \"IMAGENAME eq python.exe\")",
-      "Bash(powershell -Command \"Start-Sleep -Seconds 20; Get-Content 'C:\\\\Users\\\\33940\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\e--carAI\\\\80a6be88-f659-4be5-a620-585b87eaf361\\\\tasks\\\\bl4vmgbgv.output' -Tail 30\")"
+      "Bash(powershell -Command \"Start-Sleep -Seconds 20; Get-Content 'C:\\\\Users\\\\33940\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\e--carAI\\\\80a6be88-f659-4be5-a620-585b87eaf361\\\\tasks\\\\bl4vmgbgv.output' -Tail 30\")",
+      "Bash(powershell -Command \"Start-Sleep -Seconds 30; Get-Content 'C:\\\\Users\\\\33940\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\e--carAI\\\\80a6be88-f659-4be5-a620-585b87eaf361\\\\tasks\\\\blhf2r1aq.output' -ErrorAction SilentlyContinue | Select-Object -Last 20\")",
+      "Bash(powershell -Command \"Start-Sleep -Seconds 45; Get-Content 'C:\\\\Users\\\\33940\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\e--carAI\\\\80a6be88-f659-4be5-a620-585b87eaf361\\\\tasks\\\\blhf2r1aq.output' -ErrorAction SilentlyContinue | Select-Object -Last 25\")",
+      "Bash(powershell -Command \"Start-Sleep -Seconds 60; Get-Content 'C:\\\\Users\\\\33940\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\e--carAI\\\\80a6be88-f659-4be5-a620-585b87eaf361\\\\tasks\\\\blhf2r1aq.output' -ErrorAction SilentlyContinue | Select-Object -Last 30\")",
+      "Bash(powershell -Command \"Start-Sleep -Seconds 60; Get-Content 'C:\\\\Users\\\\33940\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\e--carAI\\\\80a6be88-f659-4be5-a620-585b87eaf361\\\\tasks\\\\blhf2r1aq.output' -ErrorAction SilentlyContinue | Select-Object -Last 25\")",
+      "Bash(powershell -Command \"Start-Sleep -Seconds 45; Get-Content 'C:\\\\Users\\\\33940\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\e--carAI\\\\80a6be88-f659-4be5-a620-585b87eaf361\\\\tasks\\\\blhf2r1aq.output' -ErrorAction SilentlyContinue | Select-Object -Last 20\")",
+      "Bash(python -u -c \"import sys; sys.path.insert\\(0, 'rl_advanced'\\); from config import Config; from env import MultiAGVEnv; cfg = Config\\(\\); cfg.curriculum = True; cfg.curriculum_stages = [{'episodes':150,'n_agvs':2,'n_dynamic_obs':0,'enable_priority':False},{'episodes':150,'n_agvs':3,'n_dynamic_obs':1,'enable_priority':False},{'episodes':100,'n_agvs':4,'n_dynamic_obs':2,'enable_priority':True}]; dim = MultiAGVEnv.get_max_obs_dim\\(cfg\\); print\\(f'max dim={dim}'\\); cfg.n_agvs=2; cfg.n_dynamic_obs=0; cfg.enable_priority=False; env=MultiAGVEnv\\(cfg\\); s=env.reset\\(\\); print\\(f'actual state shape={s.shape}'\\)\")",
+      "Bash(python _build_single_file.py)",
+      "Bash(python -c \"compile\\(open\\('D:/carAI_project.py'\\).read\\(\\), 'D:/carAI_project.py', 'exec'\\); print\\('syntax OK'\\)\")",
+      "Bash(python -c \"compile\\(open\\('D:/carAI_project.py', encoding='utf-8'\\).read\\(\\), 'D:/carAI_project.py', 'exec'\\); print\\('syntax OK'\\)\")",
+      "Bash(python D:/carAI_project.py --test --trials 2)"
     ],
     "additionalDirectories": [
       "d:\\"
