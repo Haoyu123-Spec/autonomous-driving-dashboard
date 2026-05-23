@@ -27,7 +27,8 @@
       "Bash(python _build_single_file.py)",
       "Bash(python -c \"compile\\(open\\('D:/carAI_project.py'\\).read\\(\\), 'D:/carAI_project.py', 'exec'\\); print\\('syntax OK'\\)\")",
       "Bash(python -c \"compile\\(open\\('D:/carAI_project.py', encoding='utf-8'\\).read\\(\\), 'D:/carAI_project.py', 'exec'\\); print\\('syntax OK'\\)\")",
-      "Bash(python D:/carAI_project.py --test --trials 2)"
+      "Bash(python D:/carAI_project.py --test --trials 2)",
+      "Bash(python D:/carAI_project.py --test --trials 1)"
     ],
     "additionalDirectories": [
       "d:\\"
