@@ -5,9 +5,24 @@ PROJECT = "e:/carAI"
 OUT = "D:/carAI_project.py"
 
 
+LOCAL_MODULES = {"config", "env", "agent", "network"}
+
 def read(path):
     with open(path, "r", encoding="utf-8") as f:
         return f.read()
+
+def strip_local_imports(content):
+    """移除跨文件内部导入（config/env/agent/network），保留外部库导入"""
+    lines = content.split("\n")
+    result = []
+    for line in lines:
+        # 跳过 from config/env/agent/network import ...
+        if line.startswith("from "):
+            parts = line.split()
+            if len(parts) >= 2 and parts[1] in LOCAL_MODULES:
+                continue
+        result.append(line)
+    return "\n".join(result)
 
 
 header = """\
