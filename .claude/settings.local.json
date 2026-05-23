@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rtk ls *)",
+      "Bash(rtk git *)",
+      "Read(//d//**)",
+      "Read(//c/Users/33940/.claude/**)",
+      "Bash(cp \"d:/dueling_dqn_agv.py\" \"e:/carAI/dueling_dqn_agv.py\")",
+      "Bash(python -c \"import sys; sys.path.insert\\(0, 'rl_advanced'\\); from config import Config; from env import MultiAGVEnv; cfg = Config\\(\\); cfg.n_agvs=2; cfg.n_dynamic_obs=1; cfg.episodes=5; env = MultiAGVEnv\\(cfg\\); s = env.reset\\(\\); print\\(f'state_dim={s.shape[1]}'\\); a = [1,0]; ns, r, d, info = env.step\\(a\\); print\\(f'rewards={r}, done={d}, info={info}'\\)\")",
+      "Bash(python -c \"import sys; sys.path.insert\\(0, 'rl_advanced'\\); from config import Config; from network import DuelingDQN, NoisyLinear, PrioritizedReplayBuffer; import torch; cfg = Config\\(\\); net = DuelingDQN\\(20, 5, 128, True\\); x = torch.randn\\(4, 20\\); y = net\\(x\\); print\\(f'output shape={y.shape}'\\); buf = PrioritizedReplayBuffer\\(1000\\); buf.push\\([1]*20, 0, 1.0, [2]*20, 0.0\\); result = buf.sample\\(2\\); print\\(f'PER sample ok: {result is not None}'\\)\")",
+      "Bash(where python *)",
+      "Bash(rtk pip *)",
+      "Bash(conda info *)",
+      "Bash(python -c \"import torch; print\\(f'torch {torch.__version__} installed, CUDA={torch.cuda.is_available\\(\\)}'\\)\")",
+      "Bash(python -c ' *)",
+      "Bash(python rl_advanced/train.py)",
+      "Bash(powershell -Command \"Start-Sleep -Seconds 15; Get-Content 'C:\\\\Users\\\\33940\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\e--carAI\\\\80a6be88-f659-4be5-a620-585b87eaf361\\\\tasks\\\\buwohgrhu.output' -Tail 30\")",
+      "Bash(Get-Content 'C:\\\\Users\\\\33940\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\e--carAI\\\\80a6be88-f659-4be5-a620-585b87eaf361\\\\tasks\\\\buwohgrhu.output')",
+      "Bash(tasklist /FI \"IMAGENAME eq python.exe\")",
+      "Bash(powershell -Command \"Start-Sleep -Seconds 20; Get-Content 'C:\\\\Users\\\\33940\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\e--carAI\\\\80a6be88-f659-4be5-a620-585b87eaf361\\\\tasks\\\\bl4vmgbgv.output' -Tail 30\")"
+    ],
+    "additionalDirectories": [
+      "d:\\"
+    ]
+  }
+}
