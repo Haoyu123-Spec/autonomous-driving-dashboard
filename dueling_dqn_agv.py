@@ -19,24 +19,31 @@ class CONFIG:
     agv_radius: float = 0.25
     step_size: float = 0.3
     max_steps: int = 200
-    episodes: int = 2000
+    episodes: int = 3000
     batch_size: int = 128
-    lr: float = 1e-3
+    lr: float = 3e-4
     gamma: float = 0.99
     epsilon: float = 1.0
-    eps_min: float = 0.02
-    eps_decay: float = 0.998
+    eps_min: float = 0.05
+    eps_decay: float = 0.9985          # 按 episode 衰减（非每步）
+    target_update_freq: int = 200       # 硬更新 target 网络步数（0=软更新）
     tau: float = 0.005
     hidden: int = 256
     buffer_capacity: int = 200_000
     learn_start: int = 2000
-    reward_goal: float = 30.0
-    reward_collision: float = -20.0
-    reward_step: float = -0.05
-    reward_shaping_scale: float = 0.5
+    grad_clip: float = 10.0
+    # 奖励（已缩放到合理范围，避免 Q 值发散）
+    reward_goal: float = 15.0
+    reward_collision: float = -5.0
+    reward_step: float = -0.01
+    reward_shaping_scale: float = 2.0   # 势能差缩放（距离每减少1，奖励+2）
     device: str = "cuda" if torch.cuda.is_available() else "cpu"
     render_interval: int = 200
-    print_interval: int = 50
+    print_interval: int = 10
+    # 早停
+    early_stop_patience: int = 500      # 连续无改善 episode 数
+    save_min_improvement: float = 0.5   # avg100 至少改善此值才保存
+    save_path: str = "e:/carAI/dueling_dqn_agv_best.pth"
 
 
 class MultiAGVEnv:
@@ -169,6 +176,7 @@ class DuelingDQNAgent:
         self.optimizer = optim.Adam(self.online.parameters(), lr=cfg.lr)
         self.buffer = ReplayBuffer(cfg.buffer_capacity)
         self.epsilon = cfg.epsilon
+        self.update_step = 0
 
     def act(self, states, eval_mode=False):
         if not eval_mode and np.random.random() < self.epsilon:
@@ -187,15 +195,22 @@ class DuelingDQNAgent:
             target_q = self.target(ns).gather(1, next_a.unsqueeze(1)).squeeze()
             y = r + cfg.gamma * (1 - d) * target_q
         q = self.online(s).gather(1, a.unsqueeze(1)).squeeze()
-        loss = nn.MSELoss()(q, y)
+        # SmoothL1Loss（Huber）对大 Q 值更稳定，不易发散
+        loss = nn.SmoothL1Loss()(q, y)
         self.optimizer.zero_grad()
         loss.backward()
-        torch.nn.utils.clip_grad_norm_(self.online.parameters(), 10.0)
+        torch.nn.utils.clip_grad_norm_(self.online.parameters(), cfg.grad_clip)
         self.optimizer.step()
-        with torch.no_grad():
-            for tp, op in zip(self.target.parameters(), self.online.parameters()):
-                tp.data.copy_(cfg.tau * op.data + (1 - cfg.tau) * tp.data)
-        self.epsilon = max(cfg.eps_min, self.epsilon * cfg.eps_decay)
+
+        self.update_step += 1
+        # 硬更新：每 target_update_freq 步完全同步 target（更稳定）
+        if cfg.target_update_freq > 0:
+            if self.update_step % cfg.target_update_freq == 0:
+                self.target.load_state_dict(self.online.state_dict())
+        else:
+            with torch.no_grad():
+                for tp, op in zip(self.target.parameters(), self.online.parameters()):
+                    tp.data.copy_(cfg.tau * op.data + (1 - cfg.tau) * tp.data)
         return loss.item()
 
 
@@ -224,18 +239,25 @@ def render(env, ax, scores=None):
     plt.pause(0.01)
 
 
-def train(cfg=None):
+def train(cfg=None, headless=True):
     if cfg is None:
         cfg = CONFIG()
+    import matplotlib
+    if headless:
+        matplotlib.use("Agg")
     import matplotlib.pyplot as plt
-    plt.ion()
-    fig, ax = plt.subplots(figsize=(6, 6))
+    if not headless:
+        plt.ion()
+        fig, ax = plt.subplots(figsize=(6, 6))
+    else:
+        ax = None
     env = MultiAGVEnv(cfg)
     state_dim = env.reset().shape[1]
     action_dim = 5
     agent = DuelingDQNAgent(state_dim, action_dim, cfg)
     all_scores = []
     best_avg = -float("inf")
+    best_ep = 0
     for ep in range(1, cfg.episodes + 1):
         states = env.reset()
         ep_scores = np.zeros(cfg.n_agvs)
@@ -253,27 +275,45 @@ def train(cfg=None):
             states = next_states
             if done:
                 break
+
+        # ε 按 episode 衰减（非每步！）
+        agent.epsilon = max(cfg.eps_min, agent.epsilon * cfg.eps_decay)
+
         avg_score = ep_scores.mean()
         all_scores.append(avg_score)
         running_avg = np.mean(all_scores[-100:])
+
         if ep % cfg.print_interval == 0:
             loss_str = f"loss: {loss:.4f}" if loss is not None else "loss: -"
             print(f"ep {ep:5d} | avg_score: {avg_score:7.1f} | "
                   f"avg100: {running_avg:7.1f} | eps: {agent.epsilon:.3f} | "
                   f"steps: {step:3d} | {loss_str}")
-        if ep % cfg.render_interval == 0:
+
+        if ep % cfg.render_interval == 0 and not headless and ax is not None:
             render(env, ax, ep_scores)
-        if len(all_scores) >= 100 and running_avg > best_avg:
+
+        # 保存最优模型 + 早停（需改善超过阈值才保存，避免每集都写盘）
+        if (len(all_scores) >= 100
+                and running_avg > best_avg + cfg.save_min_improvement):
             best_avg = running_avg
-            torch.save(agent.online.state_dict(), r"D:\dueling_dqn_agv_best.pth")
-            print(f"  -> saved (avg100={best_avg:.1f})")
-    plt.ioff()
-    plt.show()
-    print(f"\nDone. best avg100: {best_avg:.1f}")
+            best_ep = ep
+            torch.save(agent.online.state_dict(), cfg.save_path)
+            print(f"  -> saved (avg100={best_avg:.1f}, ep={ep})")
+        # 早停：连续无改善则终止
+        if (len(all_scores) >= 100
+                and ep - best_ep > cfg.early_stop_patience
+                and best_ep > 0):
+            print(f"\n早停：{cfg.early_stop_patience} 集无改善 (best_ep={best_ep}, best_avg={best_avg:.1f})")
+            break
+
+    if not headless:
+        plt.ioff()
+        plt.show()
+    print(f"\nDone. best avg100: {best_avg:.1f} at ep {best_ep}")
     return agent, env
 
 
-def demo(model_path=r"D:\dueling_dqn_agv_best.pth", n_episodes=3):
+def demo(model_path=None, n_episodes=3):
     import matplotlib.pyplot as plt
     plt.ion()
     fig, ax = plt.subplots(figsize=(6, 6))
@@ -281,6 +321,7 @@ def demo(model_path=r"D:\dueling_dqn_agv_best.pth", n_episodes=3):
     env = MultiAGVEnv(cfg)
     state_dim = env.reset().shape[1]
     agent = DuelingDQNAgent(state_dim, 5, cfg)
+    model_path = model_path or cfg.save_path
     agent.online.load_state_dict(torch.load(model_path, map_location=cfg.device))
     agent.online.eval()
     for _ in range(n_episodes):
@@ -299,5 +340,9 @@ def demo(model_path=r"D:\dueling_dqn_agv_best.pth", n_episodes=3):
 
 
 if __name__ == "__main__":
-    agent, env = train()
+    import argparse
+    p = argparse.ArgumentParser()
+    p.add_argument("--show", action="store_true", help="显示可视化")
+    args = p.parse_args()
+    agent, env = train(headless=not args.show)
     demo()

@@ -1,4 +1,5 @@
 import math
+
 import numpy as np
 import torch
 import torch.nn as nn
@@ -57,16 +58,32 @@ class NoisyLinear(nn.Module):
 
 
 class DuelingDQN(nn.Module):
-    def __init__(self, state_dim, action_dim, hidden, use_noisy=True):
+    def __init__(self, state_dim, action_dim, hidden, use_noisy=True,
+                 use_attention=False, attention_heads=4):
         super().__init__()
         Linear = NoisyLinear if use_noisy else nn.Linear
         linear_kwargs = {} if use_noisy else {}
 
         self.use_noisy = use_noisy
+        self.use_attention = use_attention
+
         self.feature = nn.Sequential(
             Linear(state_dim, hidden, **linear_kwargs), nn.ReLU(),
-            Linear(hidden, hidden, **linear_kwargs), nn.ReLU(),
         )
+
+        if use_attention:
+            self.entity_proj = nn.Linear(2, hidden)  # 每2维投影到hidden
+            self.attn = nn.MultiheadAttention(hidden, attention_heads,
+                                              batch_first=True)
+            self.attn_norm = nn.LayerNorm(hidden)
+            self.feature2 = nn.Sequential(
+                Linear(hidden + hidden, hidden, **linear_kwargs), nn.ReLU(),
+            )
+        else:
+            self.feature2 = nn.Sequential(
+                Linear(hidden, hidden, **linear_kwargs), nn.ReLU(),
+            )
+
         self.value = nn.Sequential(
             Linear(hidden, hidden // 2, **linear_kwargs), nn.ReLU(),
             Linear(hidden // 2, 1, **linear_kwargs),
@@ -76,8 +93,29 @@ class DuelingDQN(nn.Module):
             Linear(hidden // 2, action_dim, **linear_kwargs),
         )
 
+    def _apply_attention(self, x):
+        """将状态拆成 (batch, n_entities, 2) 做跨实体注意力"""
+        B, D = x.shape
+        # D = 4(自身+目标) + (max_agents-1)*2 + n_obs*2
+        # 按2维一组拆分，最后不足2维的补0
+        n_pairs = (D + 1) // 2
+        padded = D % 2
+        if padded:
+            x = F.pad(x, (0, 1))  # 补到偶数
+        entities = x.view(B, n_pairs, 2)  # (B, n_entities, 2)
+        e = self.entity_proj(entities)     # (B, n_entities, hidden)
+        attn_out, _ = self.attn(e, e, e)
+        attn_out = self.attn_norm(attn_out + e)
+        pooled = attn_out.mean(dim=1)      # (B, hidden)
+        return pooled
+
     def forward(self, x):
         f = self.feature(x)
+        if self.use_attention:
+            attn_f = self._apply_attention(x)
+            f = self.feature2(torch.cat([f, attn_f], dim=-1))
+        else:
+            f = self.feature2(f)
         v = self.value(f)
         a = self.advantage(f)
         return v + a - a.mean(dim=1, keepdim=True)

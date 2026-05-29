@@ -1,0 +1,14 @@
+# Ruff 配置文件
+# 运行: ruff check .     # 检查
+#       ruff format .    # 格式化
+
+line-length = 120
+target-version = "py310"
+
+[lint]
+select = ["E", "F", "I", "N", "W", "UP", "B", "SIM"]
+ignore = ["E501"]  # 长行交给 formatter 处理
+
+[format]
+quote-style = "double"
+indent-style = "space"

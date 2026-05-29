@@ -9,7 +9,7 @@ AI大模型驱动的智能汽车自动驾驶决策优化与车路协同交互系
 
 ## 项目文件
 - `Code_20260510.html` — 技术方案展示页面（仪表盘），包含技术趋势、架构、创新点等
-- `d:/dueling_dqn_agv.py` — 多AGV碰撞避免的 Dueling DQN 强化学习实现，对应决策层的强化学习模块
+- `dueling_dqn_agv.py` — 多AGV碰撞避免的 Dueling DQN 强化学习实现，对应决策层的强化学习模块
 
 ## 关键模块（HTML页面结构）
 - 技术发展趋势 / 挑战分析
@@ -25,5 +25,5 @@ AI大模型驱动的智能汽车自动驾驶决策优化与车路协同交互系
 
 ## 开发约定
 - Python 代码使用 dataclass 管理配置
-- 路径使用绝对路径（如 `D:\dueling_dqn_agv_best.pth`）
+- 路径使用绝对路径（如 `E:\carAI\dueling_dqn_agv_best.pth`）
 - 模型保存/加载使用 PyTorch 标准方式

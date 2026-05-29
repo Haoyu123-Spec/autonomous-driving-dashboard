@@ -14,8 +14,9 @@ class DuelingDQNAgent:
         self.device = (cfg.device if torch.cuda.is_available() and cfg.device == "cuda"
                        else "cpu")
 
-        self.online = DuelingDQN(state_dim, action_dim, cfg.hidden, cfg.use_noisy).to(self.device)
-        self.target = DuelingDQN(state_dim, action_dim, cfg.hidden, cfg.use_noisy).to(self.device)
+        attn_kwargs = {"use_attention": cfg.use_attention, "attention_heads": cfg.attention_heads} if cfg.use_attention else {}
+        self.online = DuelingDQN(state_dim, action_dim, cfg.hidden, cfg.use_noisy, **attn_kwargs).to(self.device)
+        self.target = DuelingDQN(state_dim, action_dim, cfg.hidden, cfg.use_noisy, **attn_kwargs).to(self.device)
         self.target.load_state_dict(self.online.state_dict())
         self.optimizer = optim.Adam(self.online.parameters(), lr=cfg.lr)
 
@@ -113,8 +114,5 @@ class DuelingDQNAgent:
         if self.use_per and indices is not None:
             self.buffer.update_priorities(indices, td_errors + 1e-6)
 
-        # 更新 epsilon
-        if not self.use_noisy:
-            self.epsilon = max(cfg.eps_min, self.epsilon * cfg.eps_decay)
-
+        # epsilon 由 train.py 按 episode 衰减，不在此处衰减
         return loss.item()

@@ -1,0 +1,94 @@
+# Hydra 配置文件 — 多AGV冲突消解DRL训练
+# 使用方式: python train.py world.n_agvs=5 dqn.lr=1e-4
+# 详见 Hydra 文档: https://hydra.cc/docs/intro/
+
+defaults:
+  - _self_
+
+world:
+  size: 10.0
+  n_agvs: 4
+  max_agents: 8
+  agv_radius: 0.25
+  step_size: 0.3
+  max_steps: 200
+
+obstacle:
+  n_dynamic_obs: 3
+  obs_radius: 0.2
+  obs_speed: 0.15
+
+emergency:
+  enabled: true
+  prob: 0.3
+  trigger_step: 10
+  max_per_episode: 1
+  bonus: 25.0
+
+reward:
+  direction_angle_coef: 1.0
+  collision_static: -5.0
+  collision_dynamic: -8.0
+  step: -0.05
+  coop_danger_threshold: 2.0
+  coop_safe_threshold: 4.0
+  coop_danger_penalty: -3.0
+  coop_zone_reward: 1.0
+  complete: 20.0
+
+dqn:
+  batch_size: 128
+  lr: 3e-4
+  gamma: 0.99
+  tau: 0.005
+  hidden: 256
+  buffer_capacity: 200000
+  learn_start: 2000
+  use_noisy: false
+  use_attention: true
+  attention_heads: 4
+  use_per: true
+  per_alpha: 0.6
+  per_beta: 0.4
+  per_beta_increment: 1e-4
+  target_update_freq: 100
+  grad_clip: 10.0
+
+training:
+  episodes: 3000
+  epsilon: 1.0
+  eps_min: 0.05
+  eps_decay: 0.999
+  render_interval: 200
+  print_interval: 50
+  save_path: "e:/carAI/rl_advanced/best_model.pth"
+  resume_path: ""
+  early_stop_patience: 600
+
+curriculum:
+  enabled: true
+  stages:
+    - episodes: 400
+      n_agvs: 2
+      n_dynamic_obs: 0
+      emergency_enabled: false
+    - episodes: 400
+      n_agvs: 3
+      n_dynamic_obs: 1
+      emergency_enabled: false
+    - episodes: 500
+      n_agvs: 3
+      n_dynamic_obs: 2
+      emergency_enabled: false
+    - episodes: 500
+      n_agvs: 4
+      n_dynamic_obs: 2
+      emergency_enabled: false
+    - episodes: 600
+      n_agvs: 4
+      n_dynamic_obs: 3
+      emergency_enabled: true
+    - episodes: 600
+      n_agvs: 5
+      n_dynamic_obs: 4
+      emergency_enabled: true
